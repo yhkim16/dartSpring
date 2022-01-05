@@ -1,7 +1,6 @@
 package com.yhkim.hello.dto;
 import lombok.*;
 
-import org.json.simple.JSONObject;
 import javax.persistence.*;
 
 

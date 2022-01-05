@@ -4,7 +4,6 @@ import com.yhkim.hello.dto.Company;
 import com.yhkim.hello.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.json.simple.parser.JSONParser;

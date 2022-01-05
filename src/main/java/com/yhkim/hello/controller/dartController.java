@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.text.ParseException;
 
@@ -47,8 +46,6 @@ public class dartController {
 
         String corp_code = "00350048"; //Osung Advanced Material
         JSONObject response = dartservice.getCompanyInfo(corp_code);
-        //System.out.println(response);
-
         return response;
     }
 
