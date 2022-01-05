@@ -1,6 +1,11 @@
 package com.yhkim.hello.service;
 
+import com.yhkim.hello.dto.Company;
+import com.yhkim.hello.repository.CompanyRepository;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.json.simple.parser.JSONParser;
 import java.io.BufferedReader;
@@ -8,12 +13,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.ParseException;
 
+
 @Service
+@RequiredArgsConstructor
 public class dartService {
     private final String apiurl = "https://opendart.fss.or.kr/api/";
-    private final String apikey = "80bae36b296bb81c49a3e1d7d8807b40e1a23214";
+    @Value("${dart.apikey}")
+    private String apikey;
+
+    private final CompanyRepository companyRepository;
 
     public JSONObject getCompanyInfo(String corp_code) throws ParseException, org.json.simple.parser.ParseException {
         JSONObject result = null;
@@ -49,6 +60,12 @@ public class dartService {
         }
         JSONParser parser = new JSONParser();
         result = (JSONObject) parser.parse(text);
+
+        final Company company = Company.builder()
+                .corp_code(Integer.parseInt(corp_code))
+                .json(result.toJSONString())
+                .build();
+        companyRepository.save(company);
         return result;
     }
 
@@ -60,7 +77,24 @@ public class dartService {
 
             url = new URL(apiurl + "corpCode.xml?" + "crtfc_key=" + apikey);
             connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
 
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) { //HTTP 200 OK 아닌 경우
+                System.out.println("Http response Code : " + responseCode);
+            }
+            else {
+                ByteBuffer data = ByteBuffer.allocate(connection.getContentLength());
+                BufferedReader buffreader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+                strbuf = new StringBuffer();
+                byte[] chunk = new byte[1024];
+                int bytesRead = 0;
+
+                while ((bytesRead = buffreader.read()) != -1) {
+                    data.put(chunk,0,bytesRead);
+                }
+                buffreader.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
