@@ -7,25 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.ModelAndView;
+
 import java.text.ParseException;
 
 @RestController
 public class dartController {
     @Autowired
     private final dartService dartservice;
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
     public dartController(dartService dartservice) {
         this.dartservice = dartservice;
     }
     @ResponseBody
     @RequestMapping("/dart")
-    public void dart() {
-
-        //TODO:DART page 작성
-
+    public ModelAndView dart(ModelAndView mav) {
+        mav.setViewName("templete/templete");
+        return mav;
     }
     @ResponseBody
     @RequestMapping("/getOsung")

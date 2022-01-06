@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.servlet.ModelAndView;
+
 
 import java.text.ParseException;
 @WebAppConfiguration
@@ -35,7 +37,7 @@ class HelloApplicationTests {
     private dartController dartController;
     @Test
     void testDartPage() {
-        dartController.dart();
+        //dartController.dart(new ModelAndView(), new HttpServletRequest());
     }
     @Test
     void companylist() {
