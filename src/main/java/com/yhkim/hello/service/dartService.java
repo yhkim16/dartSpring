@@ -5,8 +5,12 @@ import com.yhkim.hello.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.json.simple.parser.JSONParser;
+
+import org.json.XML;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -68,6 +74,21 @@ public class dartService {
         return result;
     }
 
+    public JSONObject getCompanyInfoFromCacheDB(String corp_code) {
+        JSONParser parser = new JSONParser();
+        try {
+            Company company = companyRepository.findById(Integer.parseInt(corp_code)).get();
+            return (JSONObject) parser.parse(company.getJson());
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        catch (NoSuchElementException e){
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
     public void getcorpCode() throws ParseException {
         try {
             URL url = null;
@@ -97,5 +118,27 @@ public class dartService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public JSONObject getCompanyList() {
+        ClassPathResource resource = new ClassPathResource("CORPCODE.xml");
+        JSONObject json = null;
+        JSONParser parser = new JSONParser();
+        try {
+            BufferedReader buffreader = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF-8"));
+            StringBuffer strbuf = new StringBuffer();
+            String data = "";
+            while ((data = buffreader.readLine()) != null) {
+                strbuf.append(data);
+            }
+            buffreader.close();
+            json = (JSONObject) parser.parse(XML.toJSONObject(strbuf.toString()).toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

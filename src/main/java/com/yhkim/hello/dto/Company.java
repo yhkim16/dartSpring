@@ -20,6 +20,11 @@ public class Company {
         this.json = json;
     }
 
+    public Company(String corp_code, String json) {
+        this.corp_code = Integer.parseInt(corp_code);
+        this.json = json;
+    }
+
     public Company() {
     }
 }

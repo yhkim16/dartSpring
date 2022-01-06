@@ -1,12 +1,14 @@
 package com.yhkim.hello.controller;
 
+import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 import com.yhkim.hello.service.dartService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.*;
@@ -25,18 +27,7 @@ public class dartController {
     @ResponseBody
     @RequestMapping("/dart")
     public void dart() {
-        ClassPathResource resource = new ClassPathResource("CORPCODE.xml");
-        try {
-            BufferedReader buffreader = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF-8"));
-            StringBuffer strbuf = new StringBuffer();
-            String data = "";
-            while ((data = buffreader.readLine()) != null) {
-                strbuf.append(data);
-            }
-            buffreader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         //TODO:DART page 작성
 
     }
@@ -47,6 +38,25 @@ public class dartController {
         String corp_code = "00350048"; //Osung Advanced Material
         JSONObject response = dartservice.getCompanyInfo(corp_code);
         return response;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/company/{corp_code}",method= RequestMethod.GET)
+    public ResponseEntity<JSONObject> company (@PathVariable("corp_code") String corp_code) {
+        JSONObject result = dartservice.getCompanyInfoFromCacheDB(corp_code);
+        System.out.println(result);
+        if (result == null){
+            JSONObject error_json = new JSONObject();
+            error_json.put("ErrCode", 404);
+            error_json.put("response","company " + corp_code +" is Not Found");
+            return new ResponseEntity<>(error_json,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/company/list",method= RequestMethod.GET)
+    public JSONObject companyList() {
+        JSONObject res = dartservice.getCompanyList();
+        return res;
     }
 
 }
