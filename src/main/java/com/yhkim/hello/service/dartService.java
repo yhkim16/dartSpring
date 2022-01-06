@@ -3,13 +3,13 @@ package com.yhkim.hello.service;
 import com.yhkim.hello.dto.Company;
 import com.yhkim.hello.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
+
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.json.simple.parser.JSONParser;
-
-import org.json.XML;
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,9 +18,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.NoSuchElementException;
-
+import java.io.*;
+import org.json.XML;
 
 @Service
 @RequiredArgsConstructor
@@ -132,7 +132,7 @@ public class dartService {
                 strbuf.append(data);
             }
             buffreader.close();
-            json = (JSONObject) parser.parse(XML.toJSONObject(strbuf.toString()).toString());
+            json = (JSONObject) parser.parse(XML.toJSONObject(strbuf.toString(),true).toString());
 
         } catch (IOException e) {
             e.printStackTrace();

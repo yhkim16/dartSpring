@@ -37,4 +37,8 @@ class HelloApplicationTests {
     void testDartPage() {
         dartController.dart();
     }
+    @Test
+    void companylist() {
+        dartController.companyList(1);
+    }
 }

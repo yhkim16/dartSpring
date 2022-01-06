@@ -1,17 +1,13 @@
 package com.yhkim.hello.controller;
 
-import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 import com.yhkim.hello.service.dartService;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.io.*;
 import java.text.ParseException;
 
 @RestController
@@ -56,6 +52,18 @@ public class dartController {
     @RequestMapping(value = "/company/list",method= RequestMethod.GET)
     public JSONObject companyList() {
         JSONObject res = dartservice.getCompanyList();
+        return res;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/company/list/{page_number}",method= RequestMethod.GET)
+    public JSONObject companyList(@PathVariable("page_number") int page_number) {
+        JSONObject CompanyList = dartservice.getCompanyList();
+        JSONObject tmp = (JSONObject) CompanyList.get("result");
+        JSONArray list = (JSONArray) tmp.get("list");
+        JSONObject res = new JSONObject();
+        for (int i = ((page_number- 1) * 10)  ; i < (page_number * 10);i++) {
+            res.put(i,list.get(i));
+        }
         return res;
     }
 
