@@ -39,7 +39,6 @@ public class dartController {
     @RequestMapping(value = "/company/{corp_code}",method= RequestMethod.GET)
     public ResponseEntity<JSONObject> company (@PathVariable("corp_code") String corp_code) {
         JSONObject result = dartservice.getCompanyInfoFromCacheDB(corp_code);
-        System.out.println(result);
         if (result == null){
             JSONObject error_json = new JSONObject();
             error_json.put("ErrCode", 404);
@@ -48,6 +47,14 @@ public class dartController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/company/{corp_code}",method= RequestMethod.POST)
+    public ResponseEntity<JSONObject> company_post (@PathVariable("corp_code") String corp_code) throws ParseException, org.json.simple.parser.ParseException {
+        JSONObject result = dartservice.getCompanyInfo(corp_code);
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
     @ResponseBody
     @RequestMapping(value = "/company/list",method= RequestMethod.GET)
     public JSONObject companyList() {
