@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 import java.text.ParseException;
 
 @RestController
@@ -19,12 +21,7 @@ public class dartController {
     public dartController(dartService dartservice) {
         this.dartservice = dartservice;
     }
-    @ResponseBody
-    @RequestMapping("/dart")
-    public ModelAndView dart(ModelAndView mav) {
-        mav.setViewName("templete/templete");
-        return mav;
-    }
+
     @ResponseBody
     @RequestMapping("/getOsung")
     public JSONObject getOsung() throws ParseException, org.json.simple.parser.ParseException {
