@@ -2,11 +2,13 @@ package com.yhkim.hello.controller;
 
 import com.yhkim.hello.dto.Article;
 import com.yhkim.hello.repository.BBSRepository;
+import com.yhkim.hello.service.bbsService;
 import jdk.nashorn.internal.parser.JSONParser;
 import lombok.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -20,6 +22,9 @@ import java.util.List;
 public class bbsController {
 
     private final BBSRepository bbsRepository;
+
+    @Autowired
+    private final bbsService bbsService;
 
     @ResponseBody
     @RequestMapping(value = "/article/list",method= RequestMethod.GET)
@@ -61,47 +66,39 @@ public class bbsController {
         return res;
     }
     @ResponseBody
-    @RequestMapping(value = "/article",method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/article",method= RequestMethod.POST)
     public JSONObject post_article(@RequestBody Article article) {
-        JSONObject res = new JSONObject();
-        boolean success = false;
-        try {
-            bbsRepository.save(article);
-            success = true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            success = false;
-        }
-        finally {
-            res.put("result",success);
-        }
-        return res;
+        return bbsService.saveArticle(article);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/article",method= RequestMethod.POST, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public JSONObject post_article_octet_stream(@RequestBody Article article) {
+        return bbsService.saveArticle(article);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/article",method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public JSONObject post_article_json(@RequestBody Article article) {
+        return bbsService.saveArticle(article);
     }
     @ResponseBody
     @RequestMapping(value = "/article",method= RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public JSONObject post_article2(@RequestBody Article article) {
-        JSONObject res = new JSONObject();
-        boolean success = false;
-        try {
-            bbsRepository.save(article);
-            success = true;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            success = false;
-        }
-        finally {
-            res.put("result",success);
-        }
-        return res;
+    public JSONObject post_article_form(@RequestBody Article article) {
+        return bbsService.saveArticle(article);
     }
     @ResponseBody
     @RequestMapping(value = "/article/{id}",method= RequestMethod.DELETE)
     public JSONObject delete_article(@PathVariable("id") int id) {
-        Article article = bbsRepository.findById(id).get();
         JSONObject res = new JSONObject();
-
+        boolean success = false;
+        try {
+            bbsRepository.deleteById(id);
+            success = true;
+        } catch (Exception e){
+            e.printStackTrace();
+            success = false;
+        } finally {
+            res.put("result",success);
+        }
         return res;
     }
 
