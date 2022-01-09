@@ -1,7 +1,37 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<!-- <th:block th:replace="template :: header"></th:block> -->
-<!-- <div th:replace="header :: header"></div>  -->
+<head>
+    <th:block th:replace="fragments/header"></th:block>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url : '/company/list/1',
+                type : 'GET',
+                dataType : 'json',
+                success : function (result) {
+                    table = ''
+                    if(result instanceof Array){
+                        [].forEach.call(result, Element => {
+                            table += '<tr><th>'+Element['corp_name']+'</th><th>'+Element['stock_code']+'</th><th>'+Element['corp_code']+'</th></tr>';
+                            console.log(Element);
+                        });
+                    }
+                    $("#company_list_table_body").append(table);
+                },
+                error : function (e) {
+                    console.error('Error : ' + e.status);
+                }
+            });
+        });
+    </script>
+</head>
 <body>
-Hello World! <h1 th:text="${name}">Name</h1>
+<h1 th:text="${name}">Name</h1>
+<div id="company_list">
+    <table class="table" id="company_list_table">
+        <thead><tr><th>이름</th><th>종목코드</th><th>고유번호</th></tr></thead>
+        <tbody id="company_list_table_body"></tbody>
+    </table>
+</div>
 </body>
+</html>

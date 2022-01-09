@@ -8,11 +8,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class mainController {
     @RequestMapping("/")
-    public String index() {
-        return "Hello World!";
-    }
+    public ModelAndView index() { return new ModelAndView("redirect:/main"); }
     @RequestMapping("/main")
-    public ModelAndView main() { return new ModelAndView("redirect:/demo"); }
+    public String main(Model model) {
+        model.addAttribute("name","main");
+        return "index";
+    }
     @RequestMapping("/demo")
     public String demo(){ return "Demo"; }
 

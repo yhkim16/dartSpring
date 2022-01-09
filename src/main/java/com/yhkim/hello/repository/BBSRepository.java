@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface BBSRepository extends JpaRepository<Article, Integer> {
     Page<Article> findAll(Pageable page_number);
+    Page<Article> findArticlesByBoard(String board, Pageable page_number);
 }

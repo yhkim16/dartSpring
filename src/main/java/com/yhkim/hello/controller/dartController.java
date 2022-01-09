@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.text.ParseException;
 
@@ -58,13 +55,13 @@ public class dartController {
     }
     @ResponseBody
     @RequestMapping(value = "/company/list/{page_number}",method= RequestMethod.GET)
-    public JSONObject companyList(@PathVariable("page_number") int page_number) {
+    public JSONArray companyList(@PathVariable("page_number") int page_number) {
         JSONObject CompanyList = dartservice.getCompanyList();
         JSONObject tmp = (JSONObject) CompanyList.get("result");
         JSONArray list = (JSONArray) tmp.get("list");
-        JSONObject res = new JSONObject();
+        JSONArray res = new JSONArray();
         for (int i = ((page_number- 1) * 10)  ; i < (page_number * 10);i++) {
-            res.put(i,list.get(i));
+            res.add(list.get(i));
         }
         return res;
     }

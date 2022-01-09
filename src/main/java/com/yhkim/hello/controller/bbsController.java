@@ -3,7 +3,6 @@ package com.yhkim.hello.controller;
 import com.yhkim.hello.dto.Article;
 import com.yhkim.hello.repository.BBSRepository;
 import com.yhkim.hello.service.bbsService;
-import jdk.nashorn.internal.parser.JSONParser;
 import lombok.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,11 +50,30 @@ public class bbsController {
         return res;
     }
     @ResponseBody
+    @RequestMapping(value = "/article/board/{board}",method= RequestMethod.GET)
+    public JSONArray get_article_board(@PathVariable("board") String board) {
+        JSONArray res = new JSONArray();
+        PageRequest pageRequest = PageRequest.of(0, 1);
+        Page<Article> articles = bbsRepository.findArticlesByBoard(board, pageRequest);
+        articles.forEach(e -> res.add(e));
+        return res;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/article/board/{board}/{page_number}",method= RequestMethod.GET)
+    public JSONArray get_article_board(@PathVariable("board") String board,@PathVariable("page_number") int page_number) {
+        JSONArray res = new JSONArray();
+        PageRequest pageRequest = PageRequest.of((page_number) * 10 , (page_number + 1) * 10);
+        Page<Article> articles = bbsRepository.findArticlesByBoard(board, pageRequest);
+        articles.forEach(e -> res.add(e));
+        return res;
+    }
+    @ResponseBody
     @RequestMapping(value = "/article/{id}",method= RequestMethod.GET)
     public JSONObject get_article(@PathVariable("id") int id) {
         Article article = bbsRepository.findById(id).get();
         JSONObject res = new JSONObject();
         res.put("id", article.getId());
+        res.put("board", article.getBoard());
         res.put("title",article.getTitle());
         res.put("author",article.getAuthor());
         res.put("contents",article.getContents());

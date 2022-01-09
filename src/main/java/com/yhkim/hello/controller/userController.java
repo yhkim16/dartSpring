@@ -43,6 +43,7 @@ public class userController {
         boolean success = false;
         String user_name = (String) session.getAttribute("user_name");
         if(user_name == "") {//로그인 정보가 비어있으면 리턴
+            res.put("result",success);
             return res;
         }
         userRepository.deleteByUserName("name");
@@ -54,20 +55,29 @@ public class userController {
     @RequestMapping(value = "/session",method= RequestMethod.POST)//LogIn
     public JSONObject post_session(HttpSession session, @RequestBody String data) {
         JSONObject res = new JSONObject();
+        boolean success = false;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(16);
         String pwd_encoded = passwordEncoder.encode("pwd");
         User user = userRepository.findUserByUserNameAndUserPwd("name",pwd_encoded);
         session.setAttribute("user_name",user.getUserName());
-        res.put("session","");
-
+        success = true;
+        res.put("result",success);
         return res;
     }
     @ResponseBody
     @RequestMapping(value = "/session",method= RequestMethod.DELETE)//LogOut
     public JSONObject delete_session(HttpSession session) {
         JSONObject res = new JSONObject();
-        session.invalidate();
-        res.put("session","");
+        boolean success = false;
+        try {
+            session.invalidate();
+            success = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        } finally {
+            res.put("result",success);
+        }
         return res;
     }
 
