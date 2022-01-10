@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <th:block th:replace="fragments/header"></th:block>
+    <script type="text/javascript">
+        function request_Login() {
+            var form_data = $("#login").serializeArray();
+            var login_data = {
+                'user_name': form_data[0]['value'],
+                'user_pwd': form_data[1]['value']
+            };
+            console.log(form_data);
+            console.log(login_data);
+            $.ajax({
+                url : '/session',
+                type : 'POST',
+                data : JSON.stringify(login_data),
+                contentType: 'application/json; charset=utf-8',
+                dataType : 'json',
+                success : function (result) {
+                    if (result['result'] == true) {
+                        window.location.replace('/main')
+                    }
+                    else {
+                        alert('login faild!');
+                    }
+                },
+                error : function (e) {
+                    alert('login faild!');
+                    console.error('Error : ' + e.status);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<form name="login" id="login" method="POST">
+    <label for="user_name">username</label>
+    <input type="text" class="form-control" name="user_name" id="user_name" placeholder="username">
+    <label for="user_pwd">password</label>
+    <input type="password" class="form-control" name="user_pwd" id="user_pwd" placeholder="password">
+</form>
+<button class="btn btn-default" onclick="request_Login()">LogIn</button>
+</body>
+</html>

@@ -22,4 +22,9 @@ public class mainController {
         model.addAttribute("name","dart");
         return "dart";
     }
+    @RequestMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("name","login");
+        return "login";
+    }
 }

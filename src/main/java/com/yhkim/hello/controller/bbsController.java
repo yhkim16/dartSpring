@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequiredArgsConstructor
 public class bbsController {
@@ -98,6 +100,13 @@ public class bbsController {
     @ResponseBody
     @RequestMapping(value = "/article",method= RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public JSONObject post_article_form(@RequestBody Article article) {
+        return bbsService.saveArticle(article);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/article/{id}",method= RequestMethod.PUT)
+    public JSONObject put_article(@RequestBody Article article, @PathVariable("id") int id) {
+        article.setId(id);
+        article.createdAt();
         return bbsService.saveArticle(article);
     }
     @ResponseBody
