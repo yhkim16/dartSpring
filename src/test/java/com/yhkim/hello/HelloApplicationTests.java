@@ -1,6 +1,8 @@
 package com.yhkim.hello;
 
 import com.yhkim.hello.controller.dartController;
+import com.yhkim.hello.dto.Article;
+import com.yhkim.hello.service.bbsService;
 import com.yhkim.hello.service.dartService;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,19 @@ class HelloApplicationTests {
         //dartController.dart(new ModelAndView(), new HttpServletRequest());
     }
     @Test
-    void companylist() {
+    void testcompanylist() {
         dartController.companyList(1);
+    }
+    @Autowired
+    private bbsService bbsService;
+    @Test
+    void testBBSService() {
+        Article article = Article.builder()
+                .board("main")
+                .title("Test Article")
+                .author("me")
+                .contents("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+                .build();
+        bbsService.saveArticle(article);
     }
 }
